@@ -1,6 +1,6 @@
 # NB 1: Deeltjesmodel
 
-
+<!-- #region -->
 Computer simulaties zijn een belangrijk onderdeel bij natuurkundig onderzoek: wat we niet in het lab kunnen doen, of waar we niet goed aan kunnen meten, kunnen we alsnog bestuderen dankzij simulaties. In deze module leggen we de basis voor natuurkundige computer simulaties en maken we de eerste stappen in ons deeltjes model.
 
 De basis van een goede computer simulatie ligt, net als bij het oplossen van een natuurkundig probleem in een gedegen systematische aanpak. Deze begint vaak met:
@@ -11,7 +11,7 @@ De basis van een goede computer simulatie ligt, net als bij het oplossen van een
 ```{exercise}
 Als startopdracht modelleren we twee fietsers. Doorloop de bovenstaande drie stappen. 
 ```
-asdfasdf
+
 
 ## Numerieke modellen
 Om een simulatie te maken, splitsen we het volledige proces op in kleine stappen met een vaste (tijd)interval, zoals in onderstaande figuur. Elk stapje krijgt een nummer, van $0$ tot $N$. We gebruiken de letter $i$ om naar een specifieke stap te verwijzen.
@@ -28,13 +28,14 @@ Het gehele proces wordt opgebroken in kleine stukken: tijdsdiscretisatie.
 Wellicht heb je bovenstaande al eens gezien met het programma Coach. Anders dan bij Coach moeten we expliciet de waarden opslaan in een array. Omdat het steeds aanmaken van een nieuwe cel in een array veel rekentijd kost, is het handiger om eerst arrays te maken met waarde 0.
 
 We nemen als voorbeeld twee fietsers, waarbij de fietser 1 een eenparige beweging uitvoert en fietser 2 een eenparig versnelde beweging:
+<!-- #endregion -->
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
 
 # Beginwaarden
-dt = 0.25                  #s
+dt = 1                 #s
 t_e = 10                   #s
 N = int(t_e/dt)+1
 t = np.arange(0,t_e+dt,dt) #s
@@ -135,7 +136,7 @@ print("Massa van het deeltje " + str(this_particle.m) + " kg")
 print("Huidige positie is " + str(this_particle.r))
 
 # oproepen van de functie 'update_position' met dt = 1.0 seconde
-this_particle.update_position(1.0)
+this_particle.update_position(1)
 print("Nieuwe positie " + str(this_particle.r))
 ```
 
@@ -227,7 +228,24 @@ En als je wilt gaan voor een uitdaging:
 ```
 
 ```python
-### YOUR CODE HERE ###
+deeltje_array=[]
+
+for xstart in range(10):
+    deeltje_array.append(ParticleClass(m=1.0, v=[np.random.uniform(-5,6),xstart/10],r=[xstart,0], R=1))
+
+plt.figure()
+for deeltje in deeltje_array:
+    plt.plot(deeltje.r[0],deeltje.r[1],'k.')
+    
+for deeltje, deeltje_object in enumerate(deeltje_array):
+    deeltje_object.update_position(1.0)
+    
+for deeltje in deeltje_array:   
+    plt.plot(deeltje.r[0],deeltje.r[1],'r.')
+
+plt.show()
+
+
 ```
 
 Onze simulaties worden snel “zwaar”. Er moeten veel berekeningen gedaan worden en dat kost nu eenmaal tijd. Nu is het wel zo dat sommige berekeningen meer tijd kosten dan anderen. Om te kijken of een stukje code geoptimaliseerd kan worden, moeten we een timer maken. Dat kan met onderstaande code:
@@ -247,7 +265,15 @@ for i in range(N):
 eind = time.time()
 lengte = eind - start
 
+start2 = time.time()
+array2=np.array([])
+array2=np.append(array2,np.random.rand(1,N))
+
+eind2=time.time()
+lengte2 = eind2-start2
+
 print("Dit kostte ", lengte, "seconde!")
+print(lengte2)
 ```
 
 Idealiter draaien we de bovenstaande code een aantal keer zodat we een goede schatting hebben van de rekentijd.
@@ -315,7 +341,7 @@ class ParticleClass:
         self.r += self.v * dt
 
 # Simulation parameters
-dt = 0.1                                                            # tijd stap
+dt = 1                                                           # tijd stap
 num_steps = 500                                                     # aantal te nemen stappen
 particle = ParticleClass(m=1.0, v=[5.0, 0], r=[0.0, 0.0], R=1.0)    # het maken van ons deeltje
 ```
@@ -362,7 +388,7 @@ def update(frame):
     return dot,
 
 # Creeer de animatie
-ani = FuncAnimation(fig, update, frames=range(200), init_func=init, blit=True, interval=50)
+ani = FuncAnimation(fig, update, frames=range(200), init_func=init, blit=True, interval=50))
 
 # Omdat we werken met Jup. Notebooks (en niet een .py file)
 from IPython.display import HTML
@@ -380,7 +406,7 @@ Het is nu beter om alle code in één cel te plaatsen (hieronder gedaan voor je)
 
 ```python
 # Simulation parameters
-dt = 0.1         # time step
+dt = 1         # time step
 num_steps = 500  # number of time steps
 particle = ParticleClass(m=1.0, v=[5.0, 0], r=[0.0, 0.0],R=1.0)  
 
@@ -408,7 +434,7 @@ def update(frame):
     return dot,
 
 # Create animation
-ani = FuncAnimation(fig, update, frames=range(200), init_func=init, blit=True, interval=50)
+ani = FuncAnimation(fig, update, frames=range(200), init_func=init, blit=True, interval=50))
 
 # For Jupyter notebook:
 from IPython.display import HTML
@@ -430,7 +456,10 @@ Controleer je eigen antwoord door de functie hierboven even te vervangen door de
 def update(frame):
     particle.update_position()
     dot.set_data([particle.r[0]], [particle.r[1]])
-### YOUR CODE HERE ###
+    if particle.r[0]>10:
+        particle.r[0]=-10
+    if particle.r[0]<-10:
+        particle.r[0]=10
     return dot,         
 ```
 
@@ -446,7 +475,10 @@ Test wederom je code door de vernieuwde functie hierboven te plakken.
 def update(frame):
     particle.update_position()
     dot.set_data([particle.r[0]], [particle.r[1]])
-### YOUR CODE HERE ###
+    if particle.r[0]>10:
+        particle.v[0]=-particle.v[0]
+    if particle.r[0]<-10:
+        particle.v[0]=-particle.v[0]
     return dot,
 ```
 
@@ -461,7 +493,7 @@ Verander nu de code zodanig dat de beginsnelheid gegeven wordt door $\vec{v}=5\h
 dt = 0.1         # time step
 num_steps = 500  # number of time steps
 
-### YOUR CODE HERE ###
+particle = ParticleClass(m=1.0, v=[5.0, 3.0], r=[0.0, 0.0],R=1.0)  
 
 # Create the figure and axis
 fig, ax = plt.subplots()
@@ -484,7 +516,14 @@ def init():
 def update(frame):
     particle.update_position()
     dot.set_data([particle.r[0]], [particle.r[1]])
-    ### YOUR CODE HERE ###
+    if particle.r[0]>10:
+        particle.v[0]=-particle.v[0]
+    if particle.r[0]<-10:
+        particle.v[0]=-particle.v[0]
+    if particle.r[1]>10:
+        particle.v[1]=-particle.v[1]
+    if particle.r[1]<-10:
+        particle.v[1]=-particle.v[1]
     return dot,
 
 # Create animation
@@ -526,12 +565,27 @@ class ParticleClass:
 
 
 ```python
+# Maken van de class met versnelling
 
 # Simulation parameters
-dt = 0.1         # time step
+dt = 1         # time step
 num_steps = 500  # number of time steps
 particle = ParticleClass(m=1.0, v=[5.0, 0], r=[0.0, 0.0],R=1.0)  
-### YOUR CODE HERE ###
+
+class ParticleClass:
+    def __init__(self, m, v, r, R):
+        self.m = m                         # mass of the particle
+        self.v = np.array(v, dtype=float)  # velocity vector
+        self.r = np.array(r, dtype=float)  # position vector
+        self.R = R                         # radius of the particle
+
+    def update_position(self):
+        self.r += self.v * dt
+    
+    def update_velocity(self, a):
+        self.v += a*dt
+a=-9.81
+
 # Create the figure and axis
 fig, ax = plt.subplots()
 ax.set_xlim(-10, 10)
@@ -555,7 +609,14 @@ def update(frame):
     particle.update_position()
     
     dot.set_data([particle.r[0]], [particle.r[1]])
-    ### YOUR CODE HERE ###
+    if particle.r[0]>10:
+        particle.v[0]=-particle.v[0]
+    if particle.r[0]<-10:
+        particle.v[0]=-particle.v[0]
+    if particle.r[1]>10:
+        particle.v[1]=-particle.v[1]
+    if particle.r[1]<-10:
+        particle.v[1]=-particle.v[1]
     return dot,
 
 # Create animation
@@ -659,10 +720,12 @@ Maak de code hieronder voor twee deeltjes die bewegen in een afgesloten doos. Be
 
 ```python
 # Simulation parameters
-dt = 0.1         # time step
+dt = 1         # time step
 num_steps = 500  # number of time steps
-particleA = ParticleClass(m=1.0, v=[0, 0], r=[0.0, 0.0],R=1.0)  
-### YOUR CODE HERE ###
+particleA = ParticleClass(m=1.0, v=[0, 0], r=[0.0, 0.0],R=1.0) 
+particleB = ParticleClass(m=1.0, v=[1, 0], r=[0.0, 0.0],R=1.0)  
+
+
 
 track_x = []
 track_y = []
@@ -691,7 +754,9 @@ def update(frame):
     particleA.update_position()
     particleA.update_velocity(a)
 
-### YOUR CODE HERE ###
+    particleB.update_position()
+    particleB.update_velocity(a)
+
 
     track_x.append(particleA.r[0])
     track_y.append(particleA.r[1])
@@ -737,7 +802,7 @@ Nu je een beetje weet hoe een numeriek model werkt, hoe je boundaries kunt opgev
 ```
 
 ```{solution} ex-deeltjes_10
-Jouw antwoord.
+behoud van impuls en energie v=
 ```
 
 ```python tags=["NB1_botsingsvoorwaarde"]
