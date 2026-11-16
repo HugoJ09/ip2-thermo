@@ -1,6 +1,7 @@
 # NB 1: Deeltjesmodel
 
 <!-- #region -->
+<!-- #region -->
 Computer simulaties zijn een belangrijk onderdeel bij natuurkundig onderzoek: wat we niet in het lab kunnen doen, of waar we niet goed aan kunnen meten, kunnen we alsnog bestuderen dankzij simulaties. In deze module leggen we de basis voor natuurkundige computer simulaties en maken we de eerste stappen in ons deeltjes model.
 
 De basis van een goede computer simulatie ligt, net als bij het oplossen van een natuurkundig probleem in een gedegen systematische aanpak. Deze begint vaak met:
@@ -11,6 +12,7 @@ De basis van een goede computer simulatie ligt, net als bij het oplossen van een
 ```{exercise}
 Als startopdracht modelleren we twee fietsers. Doorloop de bovenstaande drie stappen. 
 ```
+
 
 
 ## Numerieke modellen
@@ -35,7 +37,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Beginwaarden
-dt = 0.25                  #s
+dt = 1                 #s
 t_e = 10                   #s
 N = int(t_e/dt)+1
 t = np.arange(0,t_e+dt,dt) #s
@@ -136,7 +138,7 @@ print("Massa van het deeltje " + str(this_particle.m) + " kg")
 print("Huidige positie is " + str(this_particle.r))
 
 # oproepen van de functie 'update_position' met dt = 1.0 seconde
-this_particle.update_position(1.0)
+this_particle.update_position(1)
 print("Nieuwe positie " + str(this_particle.r))
 ```
 
@@ -269,7 +271,15 @@ array = np.append(array,np.random.rand(1,N))
 eind = time.time()
 lengte = eind - start
 
+start2 = time.time()
+array2=np.array([])
+array2=np.append(array2,np.random.rand(1,N))
+
+eind2=time.time()
+lengte2 = eind2-start2
+
 print("Dit kostte ", lengte, "seconde!")
+print(lengte2)
 ```
 
 Idealiter draaien we de bovenstaande code een aantal keer zodat we een goede schatting hebben van de rekentijd.
@@ -337,7 +347,7 @@ class ParticleClass:
         self.r += self.v * dt
 
 # Simulation parameters
-dt = 0.1                                                            # tijd stap
+dt = 1                                                           # tijd stap
 num_steps = 500                                                     # aantal te nemen stappen
 particle = ParticleClass(m=1.0, v=[5.0, 0], r=[0.0, 0.0], R=1.0)    # het maken van ons deeltje
 ```
@@ -384,7 +394,7 @@ def update(frame):
     return dot,
 
 # Creeer de animatie
-ani = FuncAnimation(fig, update, frames=range(200), init_func=init, blit=True, interval=50)
+ani = FuncAnimation(fig, update, frames=range(200), init_func=init, blit=True, interval=50))
 
 # Omdat we werken met Jup. Notebooks (en niet een .py file)
 from IPython.display import HTML
@@ -402,7 +412,7 @@ Het is nu beter om alle code in één cel te plaatsen (hieronder gedaan voor je)
 
 ```python
 # Simulation parameters
-dt = 0.1         # time step
+dt = 1         # time step
 num_steps = 500  # number of time steps
 particle = ParticleClass(m=1.0, v=[5.0, 0], r=[0.0, 0.0],R=1.0)  
 
@@ -434,7 +444,7 @@ def update(frame):
     return dot,
 
 # Create animation
-ani = FuncAnimation(fig, update, frames=range(200), init_func=init, blit=True, interval=50)
+ani = FuncAnimation(fig, update, frames=range(200), init_func=init, blit=True, interval=50))
 
 # For Jupyter notebook:
 from IPython.display import HTML
@@ -569,7 +579,7 @@ class ParticleClass:
 
 
 # Simulation parameters
-dt = 0.1         # time step
+dt = 1         # time step
 num_steps = 500  # number of time steps
 particle = ParticleClass(m=1.0, v=[5.0, 0], r=[0.0, 0.0],R=1.0)  
 
@@ -727,7 +737,7 @@ Maak de code hieronder voor twee deeltjes die bewegen in een afgesloten doos. Be
 
 ```python
 # Simulation parameters
-dt = 0.1         # time step
+dt = 1         # time step
 num_steps = 500  # number of time steps
 particleA = ParticleClass(m=1.0, v=[0, 0], r=[0.0, 0.0],R=1.0)  
 particleB = ParticleClass(m=1.0, v=[1, 0], r=[0.0, 0.0],R=1.0)  
