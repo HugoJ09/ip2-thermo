@@ -223,7 +223,9 @@ Schrijf een functie die de temperatuur van het gas in onze simulatie bepaalt:
 ```python tags=["NB3_tempfun"]
 def temperature(particles) -> float:
     temp = 0.0 
-    ### YOUR CODE HERE ###
+    f= 2
+    k = 1.380649e-23
+    temp= p.kin_energy/(f*k)
     return temp
 ```
 
